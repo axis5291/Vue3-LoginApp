@@ -1,0 +1,5 @@
+로그인 개발과 관련하여 이 프로젝트 안에 2대의 서버가 있다.
+1.백엔드 서버
+  backend 폴더에서 node ./api-server 실행
+2.프로트앤드 서버
+  frontend 폴더에서 npm run serve로 실행
