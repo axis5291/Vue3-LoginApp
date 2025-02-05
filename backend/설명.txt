@@ -3,3 +3,6 @@
   backend 폴더에서 node ./api-server 실행
 2.프로트앤드 서버
   frontend 폴더에서 npm run serve로 실행
+
+
+crtl+shift+f :소스를 자동정렬 해준다.
