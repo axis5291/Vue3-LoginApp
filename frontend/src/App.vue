@@ -14,6 +14,9 @@
       <hr />
       <button>로그인</button>
     </div>  
+    <div>
+      서버에서 넘어온 멤버정보: {{ state.info }}
+    </div>
   </div>
 </template>
 
@@ -26,11 +29,12 @@ export default {
     const state = reactive({
       message: "Hello Vue 3!",
       login: false,
+      info:[],  // 서버에서 넘어온 멤버정보
     });
 
     axios.get('/api/account').then((res) => {
-        console.log(res.data);
-       // state.login = res.data.login;
+        console.log("res데이타->", res);
+        state.info = res.data;
       });
 
     return { state };
