@@ -38,7 +38,7 @@ export default {
         loginPassword:"",
       },
 
-      form:{
+      form:{  
         loginId:"",
         loginPassword:"",
       },
@@ -50,14 +50,15 @@ export default {
         loginId:state.form.loginId,
         loginPassword:state.form.loginPassword,
       };
-      console.log("서버로 보내는 데이터 검증->", args);
+      console.log("서버로 보내는 데이터 사전 검증->", args);
 
       axios.post('/api/account', args).then((res) => {
       alert("로그인 성공");
       state.account=res.data;
-      console.log("로그인 정보 서버로부터 받은 데이터->", res.data);
+      console.log("로그인 정보 서버로부터 받은 데이터:", res.data);
       }).catch((err) => {
         alert("로그인 실패");
+        console.log("로그인 정보 서버로부터 받은 데이터:", err);
       });//axios.post
      };//submit
 
@@ -67,7 +68,7 @@ export default {
 
       return { state, submit };
 
-    }//setup
+    }//setup   함수를 변수에 할당하는 것처럼 사용하면 ;이 필요하지만, 함수를 정의하는 것처럼 사용하면 ;이 필요없다.
 
 };
 </script>

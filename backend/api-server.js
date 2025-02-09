@@ -1,11 +1,12 @@
 
 const express = require('express');  
-const cors = require('cors');  // 🚀 CORS에러를 방지하기 위해 추가
+const cors = require('cors');       // 🚀 CORS에러를 방지하기 위해 추가
 
 const app = express();
 const port = 3000;
 
-const bodyParser = require('body-parser');  //클라아이언트에서 보낸 데이터를 서버에서 사용하기 위해 필요
+const bodyParser = require('body-parser');  
+//body-parser는 클라이언트에서 req.body에 실어 보낸 JSON 등의 데이터를 Express에서 해석하고 사용할 수 있도록 변환해 주는 미들웨어이다.
 
 const members=[
   { 

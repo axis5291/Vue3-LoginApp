@@ -1,2 +1,29 @@
 1.vue.config.js에서 프록시 설정을 하였다.
 이것을 안하면 cors 이슈가 생겨 백엔드 서버에 접근을 못하게 된다.
+
+뷰의 기본 구조 설명
+<script>
+
+import { reactive, ref } from "vue";    /* 1️⃣ import: 필요한 라이브러리 가져오기 */
+import axios from "axios";
+
+/* 2️⃣ export default: 컴포넌트 내용 */
+export default {
+  setup() {
+   
+    const state = reactive({        // 3️⃣ 상태 관리 (데이터)
+      message: "안녕하세요, Vue!",
+      count: 0,
+    });
+
+  
+    const increment = () => {       // 4️⃣ 함수 (메서드)
+      state.count++;
+    };   //***변수에 할당되는 것처럼 되어 있는 함수는 끝에 ;을 붙인다
+
+   
+    return { state, increment };    // 5️⃣ return (<template>에서 사용할 변수 & 함수 반환)
+  },  //***setup 변수에 할당되는 것이 정의만 되어 있는 것은 ;을 붙이지 않는다.
+};
+</script>
+
