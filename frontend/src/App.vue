@@ -39,7 +39,15 @@ export default {
       },
     }); //state
 
-    const submit = () => {
+    axios.get("/api/account").then((res) => {
+        if (res.data.id) {
+          state.account = res.data;  // ***로그인 상태 유지
+        }
+
+        console.log("서버로부터 받은 데이터->", res);
+      }); //axios.get
+
+    const submit = () => {   //로그인 버튼 클릭시 실행되는 함수, axis.post로 서버로 데이터 전송
       const args = {
         loginId: state.form.loginId,
         loginPassword: state.form.loginPassword,
@@ -57,9 +65,7 @@ export default {
         }); //axios.post
     }; //submit
 
-      axios.get("/api/account").then((res) => {
-        console.log("서버로부터 받은 데이터->", res);
-      }); //axios.get
+     
 
     return { state, submit };
   }, //setup   함수를 변수에 할당하는 것처럼 사용하면 ;이 필요하지만, 함수를 정의하는 것처럼 사용하면 ;이 필요없다.
