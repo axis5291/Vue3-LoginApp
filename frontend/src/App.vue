@@ -2,7 +2,7 @@
   <div class="app">
     <h1>{{ state.message }}</h1>
       <div v-if="state.account.id">
-        <h1>안녕하세요? {{ state.account.loginId }}! 로그인 하셨습니다.</h1>
+        <h1>안녕하세요? <span style="color: blue;">{{ state.account.name }}!</span>님 로그인 하셨습니다.</h1>
       </div>
 
       <div v-else>
@@ -30,9 +30,7 @@ export default {
       message: "Hello Vue 3!",
       account: {
         id: null,
-        lib: "",
-        loginId: "",
-        loginPassword: "",
+        name:"",
       },
 
       form: {
