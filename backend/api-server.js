@@ -7,6 +7,7 @@ const jwt=require('jsonwebtoken');  // ***🚀 JWT를 사용하기 위해 추가
 
 const app = express();
 const port = 3000;
+const jwtKey="abc1234567";  //***🚀 JWT를 사용하기 위해 추가
 
 //app.use(cors());  // ##별도로 했음 ✅ CORS 설정 추가
 app.use(bodyParser.json());    //json데이터를 사용할 수 있도록 함
@@ -28,13 +29,17 @@ const members=[
   },
 ]
 
+//암호화된 키는 임의로 지정하면 된다.
+
 app.get('/api/account', (req, res) => {
   if(req.cookies && req.cookies.token){  //쿠키사용시:req.cookies.account 쿠키에 데이터가 있는지 확인
-    jwt.verify(req.cookies.token, "abc1234567", (err, decoded)=>{  //verify메서드를 사용하여 토큰을 해독, 1인자(토큰), 2인자(암호화된 키), 3인자(콜백함수)
-        if(err){
-          res.send('로그인을 하세요');
-        }
-        res.send(decoded);   //에러가 없으면 해독된 데이터를 클라이언트에 보냄
+     jwt.verify(req.cookies.token, jwtKey, (err, decoded)=>{  //verify메서드를 사용하여 토큰을 해독, 1인자(토큰), 2인자(암호화된 키), 3인자(콜백함수)
+         if(err){
+          console.log("콜백함수 에러내용 :",err);
+          return res.send('아이디와 암호가 잘못되었습니다.');   //**return문을 만나면 함수를 빠져나오기 때문에 아래코드의 res.send()가 여러번 호출되지 않는다.
+         }
+      return res.send(decoded);   
+      //*verify의 3번째인자 콜백함수의 2번재 인자에 해독된 데이터가 들어간다. 에러가 없으면 해독된 데이터를 클라이언트에 보냄
       })
     }
      //*** 쿠키사용시 
@@ -44,7 +49,7 @@ app.get('/api/account', (req, res) => {
     //   return res.send(member);
     //  }
     else{   //
-      res.send('로그인을 하세요');  //최초 접속을 할 때 보내는 기본 메세지
+      return res.send('로그인을 하세요');  //최초 접속을 할 때 보내는 기본 메세지
    }
   })
 
@@ -65,8 +70,8 @@ app.post('/api/account', (req, res) => {
 
     const token=jwt.sign(//***🚀 JWT를 사용하기 위해 추가, 1인자(객체), 2번째 인자값(asfasdasf123)은 암호화된 키, 3인자(객체)
               {id:member.id, name:member.name },   //1인자(객체):멤버정보            
-               "abc1234567",                     //2인자 :암호화된 키
-               {expiresIn: "15m", issuer: "erlia"} //3인자(객체) :유효시간, 발급자
+               jwtKey,                             //2인자 :암호화된 키
+              {expiresIn: "15m", issuer: "erlia"}  //3인자(객체) :유효시간, 발급자
     );  //token
     
     //***새로 고침시 로그인이 풀리는 것을 방지->토큰(보안 강화), 쿠키 두가지를 사용할 수 있다.
@@ -79,6 +84,12 @@ app.post('/api/account', (req, res) => {
   }
   console.log("id:"+loginId,", password:"+loginPassword);
 });//post방식
+
+app.delete('/api/account', (req, res) => {
+  if(req.cookies && req.cookies.token){
+    res.clearCookie("token");
+    res.send("로그아웃 되었습니다.");
+}});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
