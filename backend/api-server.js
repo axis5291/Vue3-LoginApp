@@ -1,18 +1,18 @@
 
 const express = require('express');  
-//const cors = require('cors');                // 🚀 ##별도로 했음 CORS에러(같은 도메인명을 써서를 방지하기 위해 추가 
-const bodyParser = require('body-parser');   //body-parser는 클라이언트에서 req.body에 실어 보낸 JSON 등의 데이터를 Express에서 해석하고 사용할 수 있도록 변환해 주는 미들웨어이다.
+//const cors = require('cors');                 // 🚀 ##별도로 했음 CORS에러(같은 도메인명을 써서를 방지하기 위해 추가 
+const bodyParser = require('body-parser');      //body-parser는 클라이언트에서 req.body에 실어 보낸 JSON 등의 데이터를 Express에서 해석하고 사용할 수 있도록 변환해 주는 미들웨어이다.
 const cookieParser = require('cookie-parser');  // ***🚀 쿠키를 사용하기 위해 추가
-const jwt=require('jsonwebtoken');  // ***🚀 JWT를 사용하기 위해 추가
+const jwt=require('jsonwebtoken');              // ***🚀 JWT를 사용하기 위해 추가
 
 const app = express();
 const port = 3000;
-const jwtKey="abc1234567";  //***🚀 JWT를 사용하기 위해 추가
+const jwtKey="abc1234567";      //***🚀 JWT를 사용하기 위해 추가
 
-//app.use(cors());  // ##별도로 했음 ✅ CORS 설정 추가
+//app.use(cors());             // ##별도로 했음 ✅ CORS 설정 추가
 app.use(bodyParser.json());    //json데이터를 사용할 수 있도록 함
-app.use(cookieParser());  // ***🚀 쿠키를 사용하기 위해 추가
-//app.use(jwt());  // ***🚀 JWT를 사용하기 위해 추가
+app.use(cookieParser());       // ***🚀 쿠키를 사용하기 위해 추가
+//app.use(jwt());             // ***🚀 JWT를 사용하기 위해 추가
 
 const members=[
   { 
@@ -32,25 +32,29 @@ const members=[
 //암호화된 키는 임의로 지정하면 된다.
 
 app.get('/api/account', (req, res) => {
-  if(req.cookies && req.cookies.token){  //쿠키사용시:req.cookies.account 쿠키에 데이터가 있는지 확인
-     jwt.verify(req.cookies.token, jwtKey, (err, decoded)=>{  //verify메서드를 사용하여 토큰을 해독, 1인자(토큰), 2인자(암호화된 키), 3인자(콜백함수)
+   if(req.cookies && req.cookies.token){  //쿠키사용시:req.cookies.account 쿠키에 데이터가 있는지 확인
+      jwt.verify(req.cookies.token, jwtKey, (err, decoded)=>{  //verify메서드를 사용하여 토큰을 해독, 1인자(토큰), 2인자(암호화된 키), 3인자(콜백함수)
          if(err){
           console.log("콜백함수 에러내용 :",err);
           return res.send('아이디와 암호가 잘못되었습니다.');   //**return문을 만나면 함수를 빠져나오기 때문에 아래코드의 res.send()가 여러번 호출되지 않는다.
          }
-      return res.send(decoded);   
+        return res.send(decoded);   
       //*verify의 3번째인자 콜백함수의 2번재 인자에 해독된 데이터가 들어간다. 에러가 없으면 해독된 데이터를 클라이언트에 보냄
       })
     }
-     //*** 쿠키사용시 
-    // const member = JSON.parse(req.cookies.account); //쿠키에 저장된 데이터를 가져올 때는 JSON.parse()메서드를 사용하여 객체로 변환, 
-    // 
-    //  if(member.id){
-    //   return res.send(member);
-    //  }
-    else{   //
+     /* 쿠키사용시 
+
+      const member = JSON.parse(req.cookies.account); //쿠키에 저장된 데이터를 가져올 때는 JSON.parse()메서드를 사용하여 객체로 변환, 
+      
+      if(member.id){
+        return res.send(member);
+      }
+
+    */
+
+    else{   
       return res.send('로그인을 하세요');  //최초 접속을 할 때 보내는 기본 메세지
-   }
+    }
   })
 
 app.post('/api/account', (req, res) => {

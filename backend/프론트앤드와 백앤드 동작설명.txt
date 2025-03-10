@@ -1,0 +1,56 @@
+로그인 개발과 관련하여 이 프로젝트 안에 2대의 서버가 있다.
+1.백엔드 서버
+  backend 폴더에서 node ./api-server 실행
+2.프로트앤드 서버
+  frontend 폴더에서 npm run serve로 실행
+
+
+crtl+shift+f :소스를 자동정렬 해준다.
+
+아래는 프론트앤드와 백앤드 메서드들이 서로 연결지어서 응답을 하는 구조이다.
+
+                              요청 매칭 구조
+    프론트엔드 (axios)	                           백엔드 (Express)
+axios.get("/api/account")          	app.get('/api/account', (req, res) => { ... })
+axios.post("/api/account", data)   	app.post('/api/account', (req, res) => { ... })
+axios.delete("/api/account")	      app.delete('/api/account', (req, res) => { ... })
+axios.put("/api/account", data)	    app.put('/api/account', (req, res) => { ... })
+
+
+✅ 프론트에서 axios.get() → 백엔드에서 app.get()
+✅ 프론트에서 axios.post() → 백엔드에서 app.post()
+✅ 프론트에서 axios.delete() → 백엔드에서 app.delete()
+
+이런 식으로 HTTP 메서드(GET, POST, PUT, DELETE 등)가 프론트와 백엔드에서 1:1 매칭된다고 보면 됩니다! 
+
+-1.프론트
+  axios.get("/api/account").then((res) => {
+    console.log("서버 응답:", res.data);
+  });
+
+-1.백앤드
+  app.get('/api/account', (req, res) => {
+   res.send({ id: 1, name: "홍길동" });
+  });
+
+
+-2.프론트
+  axios.post("/api/account", { loginId: "test", loginPassword: "1234" })
+  .then((res) => {
+    console.log("로그인 성공:", res.data);
+  }).catch((err) => {
+    console.error("로그인 실패:", err);
+  });
+
+
+-2.백앤드
+  app.post('/api/account', (req, res) => {
+    const { loginId, loginPassword } = req.body;
+    if (loginId === "test" && loginPassword === "1234") {
+        res.send({ message: "로그인 성공", user: { id: 1, name: "홍길동" } });
+    } else {
+        res.status(401).send({ message: "로그인 실패" });
+    }
+  });
+
+
